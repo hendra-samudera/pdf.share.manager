@@ -1,3 +1,25 @@
 spring:
   application:
     name: PDF Share Manager
+
+---
+# Local Postgres datasource
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pdfsharedb
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+      pool-name: HikariPool-Local
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+    baseline-on-migrate: true  
+    baseline-version: 0

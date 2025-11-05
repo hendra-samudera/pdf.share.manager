@@ -7,10 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -21,27 +20,31 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((authorize) -> authorize
+				.requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**").permitAll() // Izinkan registrasi, login dan aset statis
 				.anyRequest().authenticated()
 			)
 			.httpBasic(Customizer.withDefaults())
 			.formLogin(form -> form
 			    .loginPage("/login")
+			    .defaultSuccessUrl("/home", true) // Arahkan ke home setelah login berhasil
 			    .permitAll()
-            );
+            )
+			.logout(logout -> logout
+				.logoutSuccessUrl("/login")
+				.permitAll()
+			);
 
 		return http.build();
 	}
 
 	@Bean
-	UserDetailsManager users(DataSource dataSource) {
-		UserDetails admin = User.builder()
-			.username("admin")
-			.password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
-			.roles("USER", "ADMIN")
-			.build();
-		JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-		users.createUser(admin);
-		return users;
+	public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource) {
+		return new JdbcUserDetailsManager(dataSource);
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 }

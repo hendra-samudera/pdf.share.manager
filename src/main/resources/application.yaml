@@ -23,3 +23,10 @@ spring:
     validate-on-migrate: true
     baseline-on-migrate: true  
     baseline-version: 0
+
+# Google Cloud Storage configuration
+gcp:
+  storage:
+    project-id: ${GCP_PROJECT_ID:pdf-sharer}
+    bucket-name: ${GCP_BUCKET_NAME:pdf-sharer-bucket}
+    public-access: true

@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
 <head>
     <title>Home - PDF Share Manager</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/home">PDF Share Manager</a>
             <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/pdf/upload">Upload PDF</a>
                 <span class="navbar-text me-3" th:text="'Welcome, ' + ${#authentication.name} + '!'"></span>
                 <form th:action="@{/logout}" method="post" class="d-inline">
                     <button type="submit" class="btn btn-outline-light">Logout</button>
@@ -25,7 +28,45 @@
                     <p class="lead">A secure platform to share and manage your PDF documents.</p>
                     <hr class="my-4">
                     <p>You are successfully logged in to the system.</p>
-                    <a class="btn btn-primary btn-lg" href="#" role="button">Get Started</a>
+                    <a class="btn btn-primary btn-lg" href="/pdf/upload" role="button">Upload PDF</a>
+                    <a class="btn btn-secondary btn-lg ms-2" href="/pdf/upload" role="button">View My Files</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5" th:if="${pdfFiles} and ${#lists.size(pdfFiles) > 0}">
+            <div class="col-lg-12">
+                <h2>My Uploaded Files</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Size</th>
+                                <th>Upload Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pdfFile : ${pdfFiles}">
+                                <td th:text="${pdfFile.originalFileName}"></td>
+                                <td th:text="${pdfFile.size} + ' bytes'"></td>
+                                <td th:text="${pdfFile.uploadDate}"></td>
+                                <td>
+                                    <a th:href="${pdfFile.downloadUrl}" target="_blank"
+                                        class="btn btn-info btn-sm">View</a>
+                                    <a th:href="${pdfFile.downloadUrl}" class="btn btn-success btn-sm"
+                                        download>Download</a>
+                                    <a th:href="@{/pdf/delete/{fileName}(fileName = ${pdfFile.fileName})}"
+                                        class="btn btn-danger btn-sm py-1 "
+                                        th:data-confirm-delete="|Are you sure you want to delete this file? This action cannot be undone.|"
+                                        onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -33,4 +74,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

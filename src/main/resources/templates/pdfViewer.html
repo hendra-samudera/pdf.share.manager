@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">PDF Viewer</title>
+
+    <!-- Open Graph Meta Tags for Social Media Sharing -->
+    <meta property="og:title" th:content="${title}" />
+    <meta property="og:description" th:content="${description}" />
+    <meta property="og:type" content="article" />
+    <!-- og:image hanya akan ditampilkan jika thumbnailUrl tersedia -->
+    <meta property="og:image" th:content="${thumbnailUrl}" th:if="${thumbnailUrl != null}" />
+    <meta property="og:image:width" content="1200" th:if="${thumbnailUrl != null}" />
+    <meta property="og:image:height" content="630" th:if="${thumbnailUrl != null}" />
+    <meta property="og:url" th:content="${currentUrl}" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card Meta Tags (Opsional, untuk tampilan Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" th:content="${title}" />
+    <meta name="twitter:description" th:content="${description}" />
+    <!-- twitter:image hanya akan ditampilkan jika thumbnailUrl tersedia -->
+    <meta name="twitter:image" th:content="${thumbnailUrl}" th:if="${thumbnailUrl != null}" />
+
+    <!-- Gaya dasar -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .viewer-container {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        .pdf-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Jika file tidak ditemukan atau error, tampilkan pesan. -->
+    <div th:if="${error}" class="error-message">
+        <h2> Error: <span th:text="${error}">An error occurred</span> </h2>
+        <a href="/">Kembali ke Beranda</a>
+    </div>
+
+    <!-- Embed PDF dari Cloud Storage jika file tersedia -->
+    <div th:unless="${error}" class="viewer-container">
+        <iframe th:src="${downloadUrl}" class="pdf-frame" type="application/pdf">
+            <p>Browser Anda tidak mendukung penampilan PDF. <a th:href="${downloadUrl}" target="_blank">Klik di sini untuk membuka PDF dari Cloud Storage.</a></p>
+        </iframe>
+    </div>
+</body>
+</html>

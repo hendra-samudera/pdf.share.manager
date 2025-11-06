@@ -10,6 +10,7 @@ public class PdfFile {
     private String contentType;
     private long size;
     private String downloadUrl;
+    private String thumbnailUrl; // Tambahkan field untuk URL thumbnail
     private String uploadDate;
     private String uploadedBy;
 
@@ -18,13 +19,14 @@ public class PdfFile {
     }
 
     // Constructor
-    public PdfFile(String id, String fileName, String originalFileName, String contentType, long size, String downloadUrl, String uploadDate, String uploadedBy) {
+    public PdfFile(String id, String fileName, String originalFileName, String contentType, long size, String downloadUrl, String thumbnailUrl, String uploadDate, String uploadedBy) {
         this.id = id;
         this.fileName = fileName;
         this.originalFileName = originalFileName;
         this.contentType = contentType;
         this.size = size;
         this.downloadUrl = downloadUrl;
+        this.thumbnailUrl = thumbnailUrl;
         this.uploadDate = uploadDate;
         this.uploadedBy = uploadedBy;
     }
@@ -76,6 +78,15 @@ public class PdfFile {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    // Getter dan Setter untuk thumbnailUrl
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getUploadDate() {

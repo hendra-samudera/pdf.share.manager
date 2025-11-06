@@ -27,6 +27,7 @@ public class PdfFileRepository {
             pdfFile.setContentType(rs.getString("content_type"));
             pdfFile.setSize(rs.getLong("file_size"));
             pdfFile.setDownloadUrl(rs.getString("download_url"));
+            pdfFile.setThumbnailUrl(rs.getString("thumbnail_url")); // Ambil thumbnail_url dari hasil query
             pdfFile.setUploadDate(rs.getTimestamp("upload_date").toString());
             pdfFile.setUploadedBy(rs.getString("uploaded_by"));
             return pdfFile;
@@ -34,7 +35,8 @@ public class PdfFileRepository {
     };
 
     public void save(PdfFile pdfFile) {
-        String sql = "INSERT INTO pdf_files (id, file_name, original_file_name, content_type, file_size, download_url, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        // Perbarui query INSERT untuk memasukkan thumbnail_url
+        String sql = "INSERT INTO pdf_files (id, file_name, original_file_name, content_type, file_size, download_url, thumbnail_url, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
                 pdfFile.getId(),
                 pdfFile.getFileName(),
@@ -42,6 +44,7 @@ public class PdfFileRepository {
                 pdfFile.getContentType(),
                 pdfFile.getSize(),
                 pdfFile.getDownloadUrl(),
+                pdfFile.getThumbnailUrl(), // Tambahkan thumbnail_url
                 pdfFile.getUploadedBy());
     }
 
